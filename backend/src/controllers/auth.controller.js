@@ -67,27 +67,51 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    console.error('=== LOGIN ATTEMPT ===');
+    console.error('Request body:', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.error('Validation errors:', errors.array());
       return res.status(400).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
+    console.error('Attempting login for email:', email);
 
     // Check if user exists
+    console.error('Querying database for user...');
     const user = await pool.query(
       'SELECT * FROM users WHERE email = $1',
       [email]
     );
+    console.error('Database query result:', {
+      found: user.rows.length > 0,
+      userDetails: user.rows[0] ? {
+        id: user.rows[0].id,
+        email: user.rows[0].email,
+        role: user.rows[0].role,
+        passwordHashLength: user.rows[0].password_hash?.length
+      } : null
+    });
 
     if (user.rows.length === 0) {
+      console.log('User not found');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.rows[0].password_hash);
-    if (!isValidPassword) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    console.log('Stored password hash:', user.rows[0].password_hash);
+    console.log('Attempting to verify password...');
+    try {
+      const isValidPassword = await bcrypt.compare(password, user.rows[0].password_hash);
+      console.log('Password verification result:', isValidPassword);
+      if (!isValidPassword) {
+        console.log('Password verification failed');
+        return res.status(401).json({ message: 'Invalid credentials' });
+      }
+    } catch (error) {
+      console.error('Error during password comparison:', error);
+      return res.status(500).json({ message: 'Error verifying credentials' });
     }
 
     // Generate JWT

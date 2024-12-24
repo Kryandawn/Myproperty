@@ -10,7 +10,9 @@ router.post(
   '/',
   auth,
   [
-    check('property_id', 'Property ID is required').notEmpty().isInt(),
+    check('property_id', 'Property ID is required').notEmpty().isUUID(4),
+    check('name', 'Name is required').notEmpty().trim(),
+    check('email', 'Valid email is required').notEmpty().isEmail(),
     check('message', 'Message is required').notEmpty().trim()
   ],
   contactController.createMessage

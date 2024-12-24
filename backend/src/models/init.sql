@@ -4,7 +4,7 @@
 INSERT INTO users (email, password_hash, role, full_name, phone)
 VALUES (
     'admin@myproperty.com',
-    '$2b$10$YourHashedPasswordHere', -- Replace with actual hashed password
+    '$2a$10$Z9iaLiYWl.0d7PAXqMWtnONg3eQUJAoPQj7xzV8yvlLRvHAn.ccDK', -- password123
     'admin',
     'System Administrator',
     '+1234567890'
@@ -14,7 +14,7 @@ VALUES (
 INSERT INTO users (email, password_hash, role, full_name, phone)
 VALUES (
     'landlord@example.com',
-    '$2b$10$YourHashedPasswordHere', -- Replace with actual hashed password
+    '$2a$10$Z9iaLiYWl.0d7PAXqMWtnONg3eQUJAoPQj7xzV8yvlLRvHAn.ccDK', -- password123
     'landlord',
     'John Doe',
     '+1234567891'
@@ -24,7 +24,7 @@ VALUES (
 INSERT INTO users (email, password_hash, role, full_name, phone)
 VALUES (
     'agent@example.com',
-    '$2b$10$YourHashedPasswordHere', -- Replace with actual hashed password
+    '$2a$10$Z9iaLiYWl.0d7PAXqMWtnONg3eQUJAoPQj7xzV8yvlLRvHAn.ccDK', -- password123
     'agent',
     'Jane Smith',
     '+1234567892'
@@ -34,7 +34,7 @@ VALUES (
 INSERT INTO users (email, password_hash, role, full_name, phone)
 VALUES (
     'renter@example.com',
-    '$2b$10$YourHashedPasswordHere', -- Replace with actual hashed password
+    '$2a$10$Z9iaLiYWl.0d7PAXqMWtnONg3eQUJAoPQj7xzV8yvlLRvHAn.ccDK', -- password123
     'renter',
     'Bob Wilson',
     '+1234567893'

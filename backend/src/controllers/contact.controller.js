@@ -3,13 +3,25 @@ const pool = require('../config/database');
 
 const createMessage = async (req, res) => {
   try {
+    console.log('Request body:', req.body);
+    console.log('Validation chain starting...');
+    
     const errors = validationResult(req);
+    console.log('Validation errors:', errors.array());
+    
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { property_id, message } = req.body;
+    console.log('Validation passed, extracting data...');
+    const { property_id, name, email, message } = req.body;
+    console.log('Extracted data:', { property_id, name, email, message });
     const sender_id = req.user.id;
+    
+    // Verify email matches authenticated user
+    if (email !== req.user.email) {
+      return res.status(400).json({ message: 'Email must match authenticated user' });
+    }
 
     // Get property details to find the owner
     const property = await pool.query(

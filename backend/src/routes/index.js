@@ -13,4 +13,9 @@ router.use('/properties', propertyRoutes);
 router.use('/users', userRoutes);
 router.use('/contact', contactRoutes);
 
+// Health check route
+router.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 module.exports = router;
