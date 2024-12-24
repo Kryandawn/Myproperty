@@ -12,11 +12,14 @@ export interface Property {
   description: string;
   price: number;
   location: string;
+  address: string;
   bedrooms: number;
   bathrooms: number;
-  area: number;
+  area_sqft: number;
   type: "apartment" | "house" | "condo";
   status: "pending" | "approved" | "rejected";
+  image_url?: string;
+  imageUrl?: string;
   images: string[];
   features: string[];
   ownerId: string;

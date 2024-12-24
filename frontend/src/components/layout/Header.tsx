@@ -1,5 +1,5 @@
-import React from 'react';
-import { theme } from '../../styles/theme';
+import { theme } from '@/styles/theme';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -8,9 +8,9 @@ const Header = () => {
         <div className="flex justify-between items-center">
           <div className="text-xl font-bold">MyProperty</div>
           <div className="space-x-4">
-            <a href="/properties" className="hover:text-white">Properties</a>
-            <a href="/login" className="hover:text-white">Login</a>
-            <a href="/register" className="hover:text-white">Register</a>
+            <Link to="/properties" className="hover:text-white">Properties</Link>
+            <Link to="/login" className="hover:text-white">Login</Link>
+            <Link to="/register" className="hover:text-white">Register</Link>
           </div>
         </div>
       </nav>

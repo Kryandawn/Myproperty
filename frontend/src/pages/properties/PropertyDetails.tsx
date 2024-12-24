@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Home, BedDouble, Bath, Square, MapPin } from 'lucide-react';
+import { MessageCircle, BedDouble, Bath, Square, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Property } from '@/types';
 
 const PropertyDetails = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [property, setProperty] = useState(null);
+  const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [showContactForm, setShowContactForm] = useState(false);

@@ -1,7 +1,12 @@
-import React from 'react';
-import { theme } from '../../styles/theme';
+import { theme } from '@/styles/theme';
+import { Property } from '@/types';
 
-const PropertyCard = ({ property }) => {
+interface PropertyCardProps {
+  property: Property;
+  onView?: () => void;
+}
+
+const PropertyCard = ({ property, onView }: PropertyCardProps) => {
   return (
     <div className="border rounded-lg overflow-hidden shadow-lg" style={{ backgroundColor: theme.colors.lightGray }}>
       <img src={property.imageUrl} alt={property.title} className="w-full h-48 object-cover"/>
@@ -19,6 +24,7 @@ const PropertyCard = ({ property }) => {
             backgroundColor: theme.colors.steelBlue,
             color: theme.colors.lightGray
           }}
+          onClick={onView}
         >
           View Details
         </button>

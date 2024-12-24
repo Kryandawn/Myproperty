@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
@@ -7,13 +6,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
+import { Property } from '@/types';
+
+type PropertyFormData = {
+  title: string;
+  description: string;
+  price: number;
+  address: string;
+  property_type: "apartment" | "house" | "condo";
+  bedrooms: number;
+  bathrooms: number;
+  area_sqft: number;
+};
 
 const PropertyCreate = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<PropertyFormData>();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: PropertyFormData) => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('/api/properties', {
@@ -41,7 +52,7 @@ const PropertyCreate = () => {
     } catch (error) {
       toast({
         title: 'Error',
-        description: error.message,
+        description: error instanceof Error ? error.message : 'Failed to create property',
         variant: 'destructive'
       });
     }
@@ -93,7 +104,7 @@ const PropertyCreate = () => {
 
               <div className="space-y-2">
                 <Select
-                  onValueChange={(value) => setValue('property_type', value)}
+                  onValueChange={(value: "apartment" | "house" | "condo") => setValue('property_type', value)}
                   {...register('property_type', { required: 'Property type is required' })}
                 >
                   <SelectTrigger>

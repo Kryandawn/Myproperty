@@ -1,8 +1,12 @@
-import React from 'react';
 import Header from './Header';
 import { Toaster } from '@/components/ui/toaster';
+import { ReactNode } from 'react';
 
-const Layout = ({ children }) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-light-gray">
       <Header />
