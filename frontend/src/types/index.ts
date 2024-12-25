@@ -11,20 +11,18 @@ export interface Property {
   title: string;
   description: string;
   price: number;
-  location: string;
   address: string;
   bedrooms: number;
   bathrooms: number;
   area_sqft: number;
-  type: "apartment" | "house" | "condo";
+  property_type: "apartment" | "house" | "condo";
   status: "pending" | "approved" | "rejected";
   image_url?: string;
-  imageUrl?: string;
   images: string[];
   features: string[];
-  ownerId: string;
-  createdAt: string;
-  updatedAt: string;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ContactMessage {

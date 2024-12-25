@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { Property } from '@/types';
+import api from '@/lib/api';
 
 type PropertyFormData = {
   title: string;
@@ -22,25 +22,15 @@ type PropertyFormData = {
 const PropertyCreate = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm<PropertyFormData>();
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<PropertyFormData>({
+    defaultValues: {
+      property_type: undefined,
+    }
+  });
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch('/api/properties', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(data)
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to create property');
-      }
+      await api.post('/properties', data);
 
       toast({
         title: 'Success',
@@ -104,8 +94,9 @@ const PropertyCreate = () => {
 
               <div className="space-y-2">
                 <Select
-                  onValueChange={(value: "apartment" | "house" | "condo") => setValue('property_type', value)}
-                  {...register('property_type', { required: 'Property type is required' })}
+                  onValueChange={(value: "apartment" | "house" | "condo") => {
+                    setValue('property_type', value, { shouldValidate: true });
+                  }}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Property Type" />

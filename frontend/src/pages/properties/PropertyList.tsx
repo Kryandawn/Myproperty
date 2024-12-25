@@ -8,6 +8,7 @@ import PropertyCard from '@/components/property/PropertyCard';
 import { Plus, Search } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Property } from '@/types';
+import api from '@/lib/api';
 
 const PropertyList = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -21,7 +22,7 @@ const PropertyList = () => {
   
   const navigate = useNavigate();
   const { toast } = useToast();
-  const user = JSON.parse(localStorage.getItem('user'));
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     fetchProperties();
@@ -29,33 +30,25 @@ const PropertyList = () => {
 
   const fetchProperties = async () => {
     try {
-      const token = localStorage.getItem('token');
       const queryParams = new URLSearchParams();
       
       if (filters.propertyType) queryParams.append('property_type', filters.propertyType);
       if (filters.search) queryParams.append('search', filters.search);
 
-      const response = await fetch(`/api/properties?${queryParams}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch properties');
-
-      const data = await response.json();
+      const { data } = await api.get<Property[]>(`/properties?${queryParams}`);
       const filteredData = data.filter(property => {
-        const price = parseFloat(property.price);
+        const price = parseFloat(property.price.replace(/[^0-9.]/g, ''));
         const minPrice = filters.minPrice ? parseFloat(filters.minPrice) : 0;
         const maxPrice = filters.maxPrice ? parseFloat(filters.maxPrice) : Infinity;
-        return price >= minPrice && price <= maxPrice;
+        return !isNaN(price) && price >= minPrice && price <= maxPrice;
       });
 
       setProperties(filteredData);
-    } catch (error) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch properties';
       toast({
         title: 'Error',
-        description: error.message,
+        description: errorMessage,
         variant: 'destructive'
       });
     } finally {
@@ -96,7 +89,7 @@ const PropertyList = () => {
               <SelectValue placeholder="Property Type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Types</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="apartment">Apartment</SelectItem>
               <SelectItem value="house">House</SelectItem>
               <SelectItem value="condo">Condo</SelectItem>

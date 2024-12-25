@@ -1,35 +1,39 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import api from '@/lib/api';
 
-const Login = () => {
+interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
+}
+
+const Login: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Login failed');
-      }
+      const response = await api.post<LoginResponse>('/auth/login', data);
+      const result = response.data;
 
       // Store token and user data
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('user', JSON.stringify(result.user));
+      if (result && result.token && result.user) {
+        localStorage.setItem('token', result.token);
+        localStorage.setItem('user', JSON.stringify(result.user));
 
       toast({
         title: 'Success',
@@ -37,11 +41,15 @@ const Login = () => {
         variant: 'success',
       });
 
-      navigate('/dashboard');
-    } catch (error) {
+        navigate('/properties');
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Login failed';
       toast({
         title: 'Error',
-        description: error.message,
+        description: errorMessage,
         variant: 'destructive',
       });
     }
@@ -70,7 +78,7 @@ const Login = () => {
                   },
                 })}
               />
-              {errors.email && (
+              {errors.email?.message && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
@@ -86,7 +94,7 @@ const Login = () => {
                   },
                 })}
               />
-              {errors.password && (
+              {errors.password?.message && (
                 <p className="text-red-500 text-sm">{errors.password.message}</p>
               )}
             </div>
