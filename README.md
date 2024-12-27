@@ -44,9 +44,42 @@ MyProperty/
 3. Start the development server: `npm start`
 
 ### Database Setup
-1. Create PostgreSQL database
-2. Run the schema.sql script
-3. Configure database connection in .env
+1. Create PostgreSQL database named 'myproperty_dev'
+2. Configure database connection in .env:
+   ```
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=postgres
+   DB_PASSWORD=your_password
+   DB_NAME=myproperty_dev
+   ```
+3. Run the schema setup:
+   ```bash
+   node backend/src/scripts/setup-db.js
+   ```
+
+### Database Seeding
+1. Ensure your PostgreSQL server is running and your .env variables are set
+2. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+3. Run the seeding script to populate sample data:
+   ```bash
+   npm run seed
+   ```
+4. Verify the seeding:
+   - Connect to PostgreSQL: `psql myproperty_dev`
+   - Check users: `SELECT * FROM users;`
+   - Check properties: `SELECT * FROM properties;`
+   - Check images: `SELECT * FROM property_images;`
+   - Check messages: `SELECT * FROM contact_messages;`
+
+The seeding script will create:
+- Sample users (admin, landlord, agent, renter)
+- Example properties with different statuses
+- Property images
+- Sample contact messages
 
 ## Features
 - User authentication (landlords, agents, renters)
